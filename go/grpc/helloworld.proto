@@ -1,0 +1,14 @@
+// HelloRequest を受け取って HelloReply を返すメソッドの定義
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+// HelloRequest のリクエスト定義
+message HelloRequest {
+  string name = 1;
+}
+
+// HelloReply のレスポンス定義
+message HelloReply {
+  string message = 1;
+}

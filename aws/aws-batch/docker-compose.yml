@@ -1,0 +1,9 @@
+version: '3.5'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    image: aws-batch-test-python
+    volumes:
+      - .:/root

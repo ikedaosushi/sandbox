@@ -1,0 +1,16 @@
+trainingInput:
+  hyperparameters:
+    goal: MINIMIZE
+    hyperparameterMetricTag: "my_loss"
+    maxTrials: 20
+    maxParallelTrials: 5
+    enableTrialEarlyStopping: True
+    params:
+    - parameterName: lr
+      type: DOUBLE
+      minValue: 0.0001
+      maxValue: 0.1
+    - parameterName: momentum
+      type: DOUBLE
+      minValue: 0.2
+      maxValue: 0.8

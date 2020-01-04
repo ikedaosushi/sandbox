@@ -1,0 +1,149 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ssd
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+  labels:
+    kubernetes.io/cluster-service: "true"
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-master 
+  labels:
+    app: mysql-master 
+spec:
+  ports:
+  - port: 3306
+    name: mysql 
+  clusterIP: None
+  selector:
+    app: mysql-master 
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-master
+  labels:
+    app: mysql-master 
+spec:
+  serviceName: "mysql-master"
+  selector:
+    matchLabels:
+      app: mysql-master 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-master
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mysql 
+        image: gihyodocker/tododb:latest
+        imagePullPolicy: Always
+        args:
+        - "--ignore-db-dir=lost+found"
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gihyo"
+        - name: MYSQL_DATABASE
+          value: "tododb"
+        - name: MYSQL_USER
+          value: "gihyo" 
+        - name: MYSQL_PASSWORD
+          value: "gihyo"
+        - name: MYSQL_MASTER
+          value: "true"
+        volumeMounts:
+        - name: mysql-data 
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ssd 
+      resources:
+        requests:
+          storage: 4Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-slave
+  labels:
+    app: mysql-slave
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  clusterIP: None
+  selector:
+    app: mysql-slave
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-slave
+  labels:
+    app: mysql-slave 
+spec:
+  serviceName: "mysql-slave"
+  selector:
+    matchLabels:
+      app: mysql-slave
+  replicas: 2
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app: mysql-slave
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mysql 
+        image: gihyodocker/tododb:latest
+        imagePullPolicy: Always
+        args:
+        - "--ignore-db-dir=lost+found"
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_MASTER_HOST
+          value: "mysql-master"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gihyo"
+        - name: MYSQL_DATABASE
+          value: "tododb"
+        - name: MYSQL_USER
+          value: "gihyo" 
+        - name: MYSQL_PASSWORD
+          value: "gihyo"
+        - name: MYSQL_REPL_USER
+          value: "repl"
+        - name: MYSQL_REPL_PASSWORD
+          value: "gihyo"
+        volumeMounts:
+        - name: mysql-data 
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ssd 
+      resources:
+        requests:
+          storage: 4Gi

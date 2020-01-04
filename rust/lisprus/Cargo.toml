@@ -1,0 +1,6 @@
+[package]
+name = "lisprus"
+version = "0.1.0"
+authors = ["Ikeda Yutao <yutaro.ikeda@kaizenplatform.com>"]
+
+[dependencies]

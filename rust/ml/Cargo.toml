@@ -1,0 +1,9 @@
+[package]
+name = "ml"
+version = "0.1.0"
+authors = ["Ikeda Yutao <ikeda.yutaro@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+csv = "1"
+rusty-machine = "0.5.4"

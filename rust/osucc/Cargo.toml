@@ -1,0 +1,6 @@
+[package]
+name = "osucc"
+version = "0.1.0"
+authors = ["ikedaosushi <ikeda.yutaro@gmail.com>"]
+
+[dependencies]
