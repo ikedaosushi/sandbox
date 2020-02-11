@@ -1,0 +1,17 @@
+proxy:
+  secretToken: 7b744ab343497e54af3472430949169bd038fdc4803e8f955f97b794799f6ddc
+auth:
+  type: google
+  google:
+    clientId: "474478129135-d0dp0l6d2a19epqd99ijbinsib54d519.apps.googleusercontent.com"
+    clientSecret: "I3GtEdLvDELW5ojEoug_hbOF"
+    callbackUrl: "http://jupyterhub-example-ikedayu.pbcd.net/hub/oauth_callback"
+    hostedDomain: "http://jupyterhub-example-ikedayu.pbcd.net"
+    loginService: "Kaizen JupyterHub on k8s"
+  whitelist:
+    users:
+      - yutaro.ikeda@kaizenplatform.com
+  admin:
+    access: true
+    users:
+      - yutaro.ikeda@kaizenplatform.com
