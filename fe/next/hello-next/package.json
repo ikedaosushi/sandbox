@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "next": "^7.0.2",
+    "next": "^13.1.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }
